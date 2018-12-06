@@ -6,30 +6,85 @@ class Readonly extends Component{
     constructor(props){
         super(props);
 
-        const data = DemoData.projects.map(project => {
-            let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
-                startResizable: false,
-                endResizable: false,
-                movable: false,
-                creatable: false,
-            });
+        let demoData = {
+            projects: []
+        };
 
-            const resourceData = project.events.map((item) => item.resource)
-            schedulerData.localeMoment.locale('en');
-            schedulerData.setResources(resourceData);
-            schedulerData.setEvents(project.events);
-            schedulerData.projectId = project.id;
-            
-            return schedulerData;
+        let projectCount;
+
+        fetch('https://hack-day-224708.appspot.com/projects', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json'
+            }
+            }).then(res => res.json())
+        .then(response => {
+            projectCount = response.length;
+            response.map(project => {
+
+
+                demoData.projects[project.id] = project;
+
+
+
+
+                fetch('https://hack-day-224708.appspot.com/project-resources?projectId=' + project.id, {
+                    method: 'GET',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                    }).then(res => res.json())
+                .then(response => {
+
+                    response.map(item => {
+                        item.resourceId = item.resource.id;
+                    });
+
+                    demoData.projects[project.id].events = response;
+                    console.log(demoData);
+
+                    if (project.id === 20002) {
+
+                        
+                        const data = demoData.projects.map(project => {
+                            let schedulerData = new SchedulerData('2018-12-09', ViewTypes.Week, false, false, {
+                                startResizable: false,
+                                endResizable: false,
+                                movable: false,
+                                creatable: false,
+                            });
+                
+                            const resourceData = project.events.map((item) => item.resource)
+                            schedulerData.localeMoment.locale('en');
+                            schedulerData.setResources(resourceData);
+                            schedulerData.setEvents(project.events);
+                            schedulerData.projectId = project.id;
+                            
+                            return schedulerData;
+                        })
+                
+                        this.setState ({
+                            viewModel: data,
+                            plannerData: demoData
+                        });
+
+                    }
+
+                })
+                .catch(error => console.error('Error:', error));
+
+            });
         })
+        .catch(error => console.error('Error:', error));
 
         this.state = {
-            viewModel: data
-        }
+            viewModel: {},
+            plannerData: {}
+        };
+        
     }
 
     renderScheduler(schedulerData) {
-        console.log(schedulerData);
         return (<div>
                     <Scheduler schedulerData={schedulerData}
                         prevClick={this.prevClick}
@@ -51,7 +106,7 @@ class Readonly extends Component{
         return (
             <div>
                 <h1>Planner Plus</h1>
-                {this.state.viewModel.map(schedulerData => 
+                {this.state.viewModel && this.state.viewModel.length && this.state.viewModel.map(schedulerData => 
                     this.renderScheduler(schedulerData)
                 )}
             </div>
@@ -59,7 +114,7 @@ class Readonly extends Component{
 
     prevClick = (schedulerData)=> {
         schedulerData.prev();
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        const filterData = this.state.plannerData.projects.filter(data => data.id === schedulerData.projectId);
         schedulerData.setEvents(filterData[0].events);
         this.setState({
             ...this.state.viewModel,
@@ -69,7 +124,7 @@ class Readonly extends Component{
 
     nextClick = (schedulerData)=> {
         schedulerData.next();
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        const filterData = this.state.plannerData.projects.filter(data => data.id === schedulerData.projectId);
         schedulerData.setEvents(filterData[0].events);
         this.setState({
             ...this.state.viewModel,
@@ -79,7 +134,7 @@ class Readonly extends Component{
 
     onViewChange = (schedulerData, view) => {
 
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        const filterData = this.state.plannerData.projects.filter(data => data.id === schedulerData.projectId);
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
         schedulerData.setEvents(filterData[0].events);
         this.setState({
@@ -90,7 +145,7 @@ class Readonly extends Component{
 
     onSelectDate = (schedulerData, date) => {
         schedulerData.setDate(date);
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        const filterData = this.state.plannerData.projects.filter(data => data.id === schedulerData.projectId);
         schedulerData.setEvents(filterData[0].events);
         this.setState({
             ...this.state.viewModel,
