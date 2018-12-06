@@ -1,50 +1,61 @@
 import React, {Component} from 'react'
-import {PropTypes} from 'prop-types'
 import Scheduler, {SchedulerData, ViewTypes, DemoData} from '../src/index'
-import Nav from './Nav'
-import ViewSrcCode from './ViewSrcCode'
 import withDragDropContext from './withDnDContext'
 
 class Readonly extends Component{
     constructor(props){
         super(props);
 
-        let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
-            startResizable: false,
-            endResizable: false,
-            movable: false,
-            creatable: false,
-        });
-        schedulerData.localeMoment.locale('en');
-        schedulerData.setResources(DemoData.resources);
-        schedulerData.setEvents(DemoData.events);
+        const data = DemoData.projects.map(project => {
+            let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
+                startResizable: false,
+                endResizable: false,
+                movable: false,
+                creatable: false,
+            });
+
+            const resourceData = project.events.map((item) => item.resource)
+            schedulerData.localeMoment.locale('en');
+            schedulerData.setResources(resourceData);
+            schedulerData.setEvents(project.events);
+            schedulerData.projectId = project.id;
+            
+            return schedulerData;
+        })
+
         this.state = {
-            viewModel: schedulerData
+            viewModel: data
         }
     }
 
+    renderScheduler(schedulerData) {
+        console.log(schedulerData);
+        return (<div>
+                    <Scheduler schedulerData={schedulerData}
+                        prevClick={this.prevClick}
+                        nextClick={this.nextClick}
+                        onSelectDate={this.onSelectDate}
+                        onViewChange={this.onViewChange}
+                        eventItemClick={this.eventClicked}
+                        viewEventClick={this.ops1}
+                        viewEventText="Ops 1"
+                        viewEvent2Text="Ops 2"
+                        viewEvent2Click={this.ops2}
+                    /> 
+                </div>
+            )
+    }
+
     render(){
-        const {viewModel} = this.state;
+        //const {viewModel} = this.state;
         return (
             <div>
-                <Nav />
-                <div>
-                    <h3 style={{textAlign: 'center'}}>Readonly view<ViewSrcCode srcCodeUrl="https://github.com/StephenChou1017/react-big-scheduler/blob/master/example/Readonly.js" /></h3>
-                    <Scheduler schedulerData={viewModel}
-                               prevClick={this.prevClick}
-                               nextClick={this.nextClick}
-                               onSelectDate={this.onSelectDate}
-                               onViewChange={this.onViewChange}
-                               eventItemClick={this.eventClicked}
-                               viewEventClick={this.ops1}
-                               viewEventText="Ops 1"
-                               viewEvent2Text="Ops 2"
-                               viewEvent2Click={this.ops2}
-                    />
-                </div>
+                <h1>Planner Plus</h1>
+                {this.state.viewModel.map(schedulerData => 
+                    this.renderScheduler(schedulerData)
+                )}
             </div>
-        )
-    }
+    )};
 
     prevClick = (schedulerData)=> {
         schedulerData.prev();
@@ -63,8 +74,18 @@ class Readonly extends Component{
     }
 
     onViewChange = (schedulerData, view) => {
+        console.log(schedulerData.projectId);
+
+         const newData = { ...this.state.viewModel }
+         //newData.forEach(element => {
+             
+         //});
+         //const filterData = newData.map(data => date.projectId === schedulerData.projectId);
+
+        console.log(newData);
+
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-        schedulerData.setEvents(DemoData.events);
+        schedulerData.setEvents(eventData);
         this.setState({
             viewModel: schedulerData
         })
