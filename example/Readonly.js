@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Header from './Header'
 import Scheduler, {SchedulerData, ViewTypes, DemoData} from '../src/index'
 import withDragDropContext from './withDnDContext'
 import AVCalendar from './AVCalendar'
@@ -50,7 +51,7 @@ class Readonly extends Component{
     render(){
         return (
             <div>
-                <h1>Planner Plus</h1>
+                <Header />
                 {this.state.viewModel.map(schedulerData => 
                     this.renderScheduler(schedulerData)
                 )}

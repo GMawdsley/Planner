@@ -1,0 +1,45 @@
+/**
+ * Base.Base
+ */
+ html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+    -webkit-font-smoothing: antialiased;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+   
+  html,
+  body {
+    overflow-x: hidden;
+  }
+     
+  // Skip Content Link for Accessibility
+  [href='main-content'] {
+    position: absolute;
+    top: 0;
+    right: 100%;
+   
+    &:focus {
+      right: auto;
+    }
+  }
+     
+  // Visually Hidden
+  .hidden {
+    position: absolute;
+    display: block !important;
+    margin: -1px;
+    padding: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    border: 0;
+    clip: rect(0 0 0 0);
+  }
+   
+  img {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
