@@ -88,8 +88,8 @@ class Readonly extends Component{
     }
 
     renderScheduler(schedulerData) {
-        return (<div>
-                    <h1>{schedulerData.projectName}</h1>
+        return (<div className="header__inner">
+                    <h2 className="sub-heading">{schedulerData.projectName}</h2>
                     <Scheduler schedulerData={schedulerData}
                         prevClick={this.prevClick}
                         nextClick={this.nextClick}
