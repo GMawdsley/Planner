@@ -6,7 +6,7 @@ class AVCalendar extends Component{
     constructor(props){
         super(props);
 
-        this.schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
+        this.schedulerData = new SchedulerData('2018-12-09', ViewTypes.Week, false, false, {
             startResizable: false,
             endResizable: false,
             movable: false,
