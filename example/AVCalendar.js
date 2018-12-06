@@ -66,7 +66,7 @@ class AVCalendar extends Component{
     render(){
         return (
             <div>
-                <h1>Available Resources</h1>
+                <h2 className="sub-heading">Available Resources</h2>
                 {this.state.resource.length && this.renderCal(this.state.resource)}
             </div>
     )};
