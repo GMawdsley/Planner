@@ -59,43 +59,42 @@ class Readonly extends Component{
 
     prevClick = (schedulerData)=> {
         schedulerData.prev();
-        schedulerData.setEvents(DemoData.events);
+        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        schedulerData.setEvents(filterData[0].events);
         this.setState({
-            viewModel: schedulerData
+            ...this.state.viewModel,
+            schedulerData
         })
     }
 
     nextClick = (schedulerData)=> {
         schedulerData.next();
-        schedulerData.setEvents(DemoData.events);
+        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        schedulerData.setEvents(filterData[0].events);
         this.setState({
-            viewModel: schedulerData
+            ...this.state.viewModel,
+            schedulerData
         })
     }
 
     onViewChange = (schedulerData, view) => {
-        console.log(schedulerData.projectId);
 
-         const newData = { ...this.state.viewModel }
-         //newData.forEach(element => {
-             
-         //});
-         //const filterData = newData.map(data => date.projectId === schedulerData.projectId);
-
-        console.log(newData);
-
+        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-        schedulerData.setEvents(eventData);
+        schedulerData.setEvents(filterData[0].events);
         this.setState({
-            viewModel: schedulerData
+            ...this.state.viewModel,
+            schedulerData
         })
     }
 
     onSelectDate = (schedulerData, date) => {
         schedulerData.setDate(date);
-        schedulerData.setEvents(DemoData.events);
+        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
+        schedulerData.setEvents(filterData[0].events);
         this.setState({
-            viewModel: schedulerData
+            ...this.state.viewModel,
+            schedulerData
         })
     }
 

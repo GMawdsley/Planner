@@ -1,7 +1,3 @@
-
-
-
-
 const DemoData = {
     projects : [
          {
