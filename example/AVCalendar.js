@@ -6,8 +6,18 @@ class AVCalendar extends Component{
     constructor(props){
         super(props);
 
+        this.schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
+            startResizable: false,
+            endResizable: false,
+            movable: false,
+            creatable: false,
+        });
+
+        this.schedulerData.localeMoment.locale('en');
+        this.schedulerData.setResources([]);
+        this.schedulerData.setEvents([]);
+
         this.state = {
-            viewModel: {},
             resource: {}
         }
     }
@@ -35,20 +45,12 @@ class AVCalendar extends Component{
         });
     }
 
-    renderCal() {
+    renderCal(resource) {
 
-        let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
-            startResizable: false,
-            endResizable: false,
-            movable: false,
-            creatable: false,
-        });
+        this.schedulerData.setResources(resource);
+        this.schedulerData.setEvents([]);
 
-        schedulerData.localeMoment.locale('en');
-        schedulerData.setResources(this.state.resource);
-        schedulerData.setEvents([]);
-
-        return (<Scheduler schedulerData={schedulerData}
+        return (<Scheduler schedulerData={this.schedulerData}
             prevClick={this.prevClick}
             nextClick={this.nextClick}
             onSelectDate={this.onSelectDate}
@@ -65,7 +67,7 @@ class AVCalendar extends Component{
         return (
             <div>
                 <h1>Available Resources</h1>
-                {this.state.resource.length && this.renderCal()}
+                {this.state.resource.length && this.renderCal(this.state.resource)}
             </div>
     )};
 
@@ -73,39 +75,32 @@ class AVCalendar extends Component{
         schedulerData.prev();
         schedulerData.setEvents([]);
         this.setState({
-            ...this.state.viewModel,
-            schedulerData
+            resource: this.state.resource
         })
     }
 
     nextClick = (schedulerData)=> {
         schedulerData.next();
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
-        schedulerData.setEvents(filterData[0].events);
+        schedulerData.setEvents([]);
         this.setState({
-            ...this.state.viewModel,
-            schedulerData
+            resource: this.state.resource
         })
     }
 
     onViewChange = (schedulerData, view) => {
 
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-        schedulerData.setEvents(filterData[0].events);
+        schedulerData.setEvents([]);
         this.setState({
-            ...this.state.viewModel,
-            schedulerData
+            resource: this.state.resource
         })
     }
 
     onSelectDate = (schedulerData, date) => {
         schedulerData.setDate(date);
-        const filterData = DemoData.projects.filter(data => data.id === schedulerData.projectId);
-        schedulerData.setEvents(filterData[0].events);
+        schedulerData.setEvents([]);
         this.setState({
-            ...this.state.viewModel,
-            schedulerData
+            resource: this.state.resource
         })
     }
 }
