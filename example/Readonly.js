@@ -48,7 +48,7 @@ class Readonly extends Component{
 
                         
                         const data = demoData.projects.map(project => {
-                            let schedulerData = new SchedulerData('2018-12-09', ViewTypes.Week, false, false, {
+                            let schedulerData = new SchedulerData('2018-12-09', ViewTypes.Month, false, false, {
                                 startResizable: false,
                                 endResizable: false,
                                 movable: false,
