@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Scheduler, {SchedulerData, ViewTypes, DemoData} from '../src/index'
 import withDragDropContext from './withDnDContext'
+import AVCalendar from './AVCalendar'
 
 class Readonly extends Component{
     constructor(props){
@@ -59,7 +60,8 @@ class Readonly extends Component{
                             schedulerData.setResources(resourceData);
                             schedulerData.setEvents(project.events);
                             schedulerData.projectId = project.id;
-                            
+                            schedulerData.projectName = project.name;
+
                             return schedulerData;
                         })
                 
@@ -86,6 +88,7 @@ class Readonly extends Component{
 
     renderScheduler(schedulerData) {
         return (<div>
+                    <h1>{schedulerData.projectName}</h1>
                     <Scheduler schedulerData={schedulerData}
                         prevClick={this.prevClick}
                         nextClick={this.nextClick}
@@ -102,13 +105,13 @@ class Readonly extends Component{
     }
 
     render(){
-        //const {viewModel} = this.state;
         return (
             <div>
                 <h1>Planner Plus</h1>
                 {this.state.viewModel && this.state.viewModel.length && this.state.viewModel.map(schedulerData => 
                     this.renderScheduler(schedulerData)
                 )}
+                <AVCalendar />
             </div>
     )};
 
